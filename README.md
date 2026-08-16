@@ -140,6 +140,35 @@ npm run dev
 }
 ```
 
+## 分割类别
+
+本项目针对少数民族服饰进行像素级语义分割，共定义 **9 个类别**（1 个背景 + 8 个服饰部件）：
+
+| 索引 | 类别名 | 中文含义 |
+| :---: | :--- | :--- |
+| 0 | `_background_` | 背景 |
+| 1 | `Headwear` | 头饰 |
+| 2 | `hat` | 帽子 |
+| 3 | `top` | 上衣 |
+| 4 | `belt` | 腰带 |
+| 5 | `pants` | 裤子 |
+| 6 | `skirt` | 裙子 |
+| 7 | `boots` | 靴子 |
+| 8 | `necklace` | 项链 |
+
+> 训练与评估时 `num_classes = 9`，对应上述类别数（含背景）。类别定义见 [get_miou.py](backend/model/segformer/get_miou.py)。
+
+## 数据标注
+
+数据集标签采用 **SAM3（Segment Anything Model 3）** 进行半自动分割标注：
+
+1. 使用 SAM3 对原始少数民族服饰图像进行零样本分割，自动生成候选掩码
+2. 人工校验与修正掩码边界，确保各服饰部件（头饰、上衣、腰带等）的分割精度
+3. 将修正后的掩码转换为 VOC 格式标签图（`.png`，像素值 = 类别索引）
+4. 通过 `json_to_dataset.py` 将标注结果转换为可直接训练的标签图
+
+> 标签像素值规范：背景为 `0`，目标服饰部件按上表索引依次为 `1~8`。标注完成后使用 `voc_annotation.py` 划分训练集 / 验证集。
+
 ## 模型说明
 
 ### SegFormer
@@ -208,14 +237,6 @@ python get_miou.py
 | `input_shape` | 输入图片尺寸 |
 | `mix_type` | 可视化方式（0 混合 / 1 仅分割图 / 2 去背景） |
 | `cuda` | 是否使用 GPU |
-
-## 致谢
-
-本项目基于以下开源工作构建：
-
-- [SegFormer (NVlabs)](https://github.com/NVlabs/SegFormer)
-- [segformer-pytorch (bubbliiiing)](https://github.com/bubbliiiing/segformer-pytorch)
-- [unet-pytorch (bubbliiiing)](https://github.com/bubbliiiing/unet-pytorch)
 
 ## License
 
