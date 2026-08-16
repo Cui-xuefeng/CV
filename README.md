@@ -1,12 +1,12 @@
 # 少数民族服饰语义分割系统
 
-> 基于 **SegFormer** 与 **UNet** 的深度学习语义分割平台，提供图片分割与实时视频流分割能力，前后端分离架构（Flask + Vue3）。
+> 模式识别课程项目 —— 基于 **SegFormer** 与 **UNet** 的深度学习语义分割平台，提供图片分割与实时视频流分割能力，前后端分离架构（Flask + Vue3）。
 
 ![项目封面](https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=semantic%20segmentation%20visualization%20of%20ethnic%20minority%20costumes%20in%20China%2C%20person%20wearing%20traditional%20clothing%2C%20pixel-level%20segmentation%20mask%20overlay%2C%20colorful%20class%20regions%2C%20deep%20learning%20computer%20vision%2C%20clean%20technical%20illustration&image_size=landscape_16_9)
 
 ## 项目简介
 
-本项目面向**少数民族服饰**的像素级语义分割任务，整合了两种主流语义分割模型，并通过 Web 可视化界面进行交互。系统支持：
+本项目为**模式识别课程**的语义分割实践项目，面向**少数民族服饰**的像素级语义分割任务。数据集由团队自行通过网络爬虫采集少数民族服饰图片，并使用 SAM3 辅助标注完成，整合了两种主流语义分割模型，并通过 Web 可视化界面进行交互。系统支持：
 
 - **图片分割检测**：上传单张图片，输出分割可视化结果
 - **实时视频流分割**：通过摄像头采集视频流（MJPEG），逐帧进行分割推理
@@ -43,7 +43,7 @@ CV/
 │   │   ├── detect.py               # SegFormer 图片检测
 │   │   ├── detect_unet.py          # UNet 图片检测
 │   │   ├── detect_real.py          # SegFormer 实时视频流
-│   │   └── detect_real_unet.py     # UNet 实时视频流
+│   │   ── detect_real_unet.py     # UNet 实时视频流
 │   ├── model/
 │   │   ├── segformer/              # SegFormer 模型实现
 │   │   │   ├── segformer.py        # 推理封装
@@ -158,16 +158,18 @@ npm run dev
 
 > 训练与评估时 `num_classes = 9`，对应上述类别数（含背景）。类别定义见 [get_miou.py](backend/model/segformer/get_miou.py)。
 
-## 数据标注
+## 数据集
 
-数据集标签采用 **SAM3（Segment Anything Model 3）** 进行半自动分割标注：
+本项目使用的少数民族服饰数据集为**团队自行采集与标注**：
 
-1. 使用 SAM3 对原始少数民族服饰图像进行零样本分割，自动生成候选掩码
-2. 人工校验与修正掩码边界，确保各服饰部件（头饰、上衣、腰带等）的分割精度
-3. 将修正后的掩码转换为 VOC 格式标签图（`.png`，像素值 = 类别索引）
-4. 通过 `json_to_dataset.py` 将标注结果转换为可直接训练的标签图
+1. **数据采集**：通过网络爬虫收集各民族服饰图片，涵盖多个少数民族的传统服饰
+2. **数据标注**：使用 SAM3（Segment Anything Model 3）进行半自动分割标注
+   - SAM3 对原始图像进行零样本分割，自动生成候选掩码
+   - 人工校验与修正掩码边界，确保各服饰部件的分割精度
+3. **数据格式**：标注结果转换为 VOC 格式（`.png` 标签图，像素值 = 类别索引）
+4. **数据集划分**：通过 `voc_annotation.py` 按 9:1 比例划分训练集与验证集
 
-> 标签像素值规范：背景为 `0`，目标服饰部件按上表索引依次为 `1~8`。标注完成后使用 `voc_annotation.py` 划分训练集 / 验证集。
+> 标签像素值规范：背景为 `0`，目标服饰部件按上表索引依次为 `1~8`。
 
 ## 模型说明
 
