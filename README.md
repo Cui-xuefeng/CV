@@ -2,11 +2,18 @@
 
 > 模式识别课程项目 —— 基于 **SegFormer** 与 **UNet** 的深度学习语义分割平台，提供图片分割与实时视频流分割能力，前后端分离架构（Flask + Vue3）。
 
-![项目封面](https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=semantic%20segmentation%20visualization%20of%20ethnic%20minority%20costumes%20in%20China%2C%20person%20wearing%20traditional%20clothing%2C%20pixel-level%20segmentation%20mask%20overlay%2C%20colorful%20class%20regions%2C%20deep%20learning%20computer%20vision%2C%20clean%20technical%20illustration&image_size=landscape_16_9)
+
 
 ## 项目简介
 
-本项目为**模式识别课程**的语义分割实践项目，面向**少数民族服饰**的像素级语义分割任务。数据集由团队自行通过网络爬虫采集少数民族服饰图片，并使用 SAM3 辅助标注完成，整合了两种主流语义分割模型，并通过 Web 可视化界面进行交互。系统支持：
+本项目为**模式识别/计算机视觉课程**的语义分割实践项目，面向**少数民族服饰**的像素级语义分割任务。数据集由团队自行通过网络爬虫采集少数民族服饰图片，并使用 SAM3 辅助标注完成，整合了两种主流语义分割模型，并通过 Web 可视化界面进行交互。
+
+仓库包含两个后端项目：
+
+- **`backend`**：少数民族服饰分割后端，使用 SegFormer 和 UNet 模型对 9 类服饰部件进行语义分割
+- **`backend-pattern-recognition`**：模式识别课程后端，集成 SegFormer 单例模式、Neo4j 知识图谱查询与 MySQL 数据库支持
+
+系统支持：
 
 - **图片分割检测**：上传单张图片，输出分割可视化结果
 - **实时视频流分割**：通过摄像头采集视频流（MJPEG），逐帧进行分割推理
